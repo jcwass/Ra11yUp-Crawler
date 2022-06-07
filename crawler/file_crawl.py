@@ -13,7 +13,7 @@ class File_Crawl():
 
     # Initializes class attributes.
     def __init__(self, validator, base_url):
-        self.entry_point= "res/crawl-entry-point.txt"
+        self.entry_point= "crawl-entry-point.txt"
         self.validator = validator
         self.base_url = base_url
 
