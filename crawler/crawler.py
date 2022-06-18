@@ -25,16 +25,16 @@ class Crawler ():
         self.validator = Validator()
 
     # Start the crawl process.
-    def start_crawls(self):
+    def start_crawls(self, url, check_robots):
 
         # Asks for the url to be crawled, then checks to ensure it is valid.
         # Valid url: 'https://ra11yup.linearbsystems.net'
-        self.url = input("Please type a full URL to crawl: ")
+        self.url = url
         valid_url = self.validator.does_url_exist(self.base_url)
         print(self.url)
-        while valid_url == False:
-            self.url = input("Invalid URL, please try again: ")
-            valid_url = self.validator.does_url_exist(self.base_url)
+        # while valid_url == False:
+        #     self.url = input("Invalid URL, please try again: ")
+        #     valid_url = self.validator.does_url_exist(self.base_url)
 
         # Runs the create base function.
         self.create_base()
@@ -42,7 +42,7 @@ class Crawler ():
         # These lines define date and other relevant info for logging purposes.
         d = datetime.today()
         epoch_time = time.mktime(d.timetuple())
-        # logging.basicConfig(filename=f'./logs/crawl-{getpass.getuser()}.{epoch_time}.log', level=logging.DEBUG )
+        logging.basicConfig(filename=f'logs/crawl-{getpass.getuser()}.{epoch_time}.log', level=logging.DEBUG )
 
         # Checks to see if a robots.txt file exists and initializes a robots parser.
         rp = urobot.RobotFileParser()
@@ -51,7 +51,7 @@ class Crawler ():
         robots = self.base_url + '/robots.txt'
 
         # Clearing the entry_point file.
-        f = open('./Ra11yUp-Crawler/res/crawl-entry-point.txt', 'w')
+        f = open('res/crawl-entry-point.txt', 'w')
         f.close()
         has_robots = self.validator.does_url_exist(robots)
 

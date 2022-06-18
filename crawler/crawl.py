@@ -57,7 +57,7 @@ class Crawl():
             # Looping through the url list and adding url to crawl entry.
             for url in final_url_list:
                 page = requests.head(url)
-                f = open('crawl-entry-point.txt', 'a+')
+                f = open('res/crawl-entry-point.txt', 'a+')
                 if page.status_code < 400 and not self.validator.has_added_to_entry(url):
                     f.write(f'{url}\n')
 

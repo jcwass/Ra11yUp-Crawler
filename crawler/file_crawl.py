@@ -1,3 +1,4 @@
+import sys
 import urllib.robotparser as urobot
 from crawler.crawl import Crawl
 
@@ -13,7 +14,7 @@ class File_Crawl():
 
     # Initializes class attributes.
     def __init__(self, validator, base_url):
-        self.entry_point= "crawl-entry-point.txt"
+        self.entry_point= "res/crawl-entry-point.txt"
         self.validator = validator
         self.base_url = base_url
 
@@ -35,7 +36,8 @@ class File_Crawl():
                 rp.set_url(url + "/robots.txt")
                 rp.read()
                 robots = url + '/robots.txt'
-                has_robots = self.validator.does_url_exist(url)
+                has_robots = self.validator.does_url_exist(robots)
                 new_crawl = Crawl(url, has_robots, rp, self.base_url, self.validator)
                 new_crawl.get_all_url()
                 self.validator.add_to_crawled(url)
+        sys.exit()
