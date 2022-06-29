@@ -1,6 +1,6 @@
 import sys
-import urllib.robotparser as urobot
-from crawler.crawl import Crawl
+import time
+from crawl import Crawl
 
 class File_Crawl():
     '''Crawls the entry_point file provided by the initial crawl.
@@ -11,13 +11,13 @@ class File_Crawl():
             self.validator (Validator()): An instance of the Validator object.
             self.base_url (String): A string of the base url of the site.
     '''
-
     # Initializes class attributes.
-    def __init__(self, validator, base_url):
-        self.entry_point= "res/crawl-entry-point.txt"
+    def __init__(self, validator, base_url, check_robots, robot_parser):
+        self.entry_point= "Ra11yUp-Crawler/res/crawl-entry-point.txt"
         self.validator = validator
         self.base_url = base_url
-
+        self.check_robots = check_robots
+        self.robot_parser = robot_parser
     # Loops through each url found in the entry_point.txt file. 
     # Initializes a crawl instance for each url that has not been crawled.
     def file_entry_point_crawl(self):
@@ -31,13 +31,13 @@ class File_Crawl():
             url = url.strip()
 
             # Checks to see if the url has been crawled.
-            if self.validator.has_crawled(url):
-                rp = urobot.RobotFileParser()
-                rp.set_url(url + "/robots.txt")
-                rp.read()
-                robots = url + '/robots.txt'
-                has_robots = self.validator.does_url_exist(robots)
-                new_crawl = Crawl(url, has_robots, rp, self.base_url, self.validator)
+            if not self.validator.has_crawled(url):
+                robots = self.base_url + '/robots.txt'
+                if self.check_robots:
+                    has_robots = self.validator.does_url_exist(robots)
+                else: 
+                    has_robots = False
+
+                new_crawl = Crawl(url, has_robots, self.base_url, self.validator, self.robot_parser)
                 new_crawl.get_all_url()
                 self.validator.add_to_crawled(url)
-        sys.exit()

@@ -23,7 +23,7 @@ class Validator():
             else:
                 return False
         except requests.exceptions.RequestException as e:
-            print(e)
+            return False
 
     # Appends a url to the crawled_list attribute.
     def add_to_crawled(self, url):

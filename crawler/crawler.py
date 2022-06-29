@@ -1,12 +1,12 @@
 from urllib.parse import urlparse
-import urllib.robotparser as urobot
+from robots_parser import Robots_Parser
 import logging
 import getpass
 import time
 from datetime import datetime
-from crawler.validator import Validator
-from crawler.crawl import Crawl
-from crawler.file_crawl import File_Crawl
+from validator import Validator
+from crawl import Crawl
+from file_crawl import File_Crawl
 
 class Crawler ():
     '''Crawls the entry_point file provided by the initial crawl.
@@ -23,6 +23,7 @@ class Crawler ():
         self.base_url = ""
         self.url = ""
         self.validator = Validator()
+        self.robots_parser = ''
 
     # Start the crawl process.
     def start_crawls(self, url, check_robots):
@@ -30,11 +31,6 @@ class Crawler ():
         # Asks for the url to be crawled, then checks to ensure it is valid.
         # Valid url: 'https://ra11yup.linearbsystems.net'
         self.url = url
-        valid_url = self.validator.does_url_exist(self.base_url)
-        print(self.url)
-        # while valid_url == False:
-        #     self.url = input("Invalid URL, please try again: ")
-        #     valid_url = self.validator.does_url_exist(self.base_url)
 
         # Runs the create base function.
         self.create_base()
@@ -44,23 +40,25 @@ class Crawler ():
         epoch_time = time.mktime(d.timetuple())
         logging.basicConfig(filename=f'logs/crawl-{getpass.getuser()}.{epoch_time}.log', level=logging.DEBUG )
 
-        # Checks to see if a robots.txt file exists and initializes a robots parser.
-        rp = urobot.RobotFileParser()
-        rp.set_url(self.base_url + "/robots.txt")
-        rp.read()
+        # Creating Robot Parser
         robots = self.base_url + '/robots.txt'
+        self.robots_parser = Robots_Parser(self.url, self.base_url)
 
         # Clearing the entry_point file.
-        f = open('res/crawl-entry-point.txt', 'w')
+        f = open('Ra11yUp-Crawler/res/crawl-entry-point.txt', 'w')
         f.close()
-        has_robots = self.validator.does_url_exist(robots)
+        if check_robots:
+            has_robots = self.validator.does_url_exist(robots)
+        else: 
+            has_robots = False
 
         # Begins the initial crawl and then calls the file_crawl object.
-        initial_crawl = Crawl(self.url, has_robots, rp, self.base_url, self.validator)
+        initial_crawl = Crawl(self.url, has_robots, self.base_url, self.validator, self.robots_parser)
         initial_crawl.get_all_url()
         self.validator.add_to_crawled(self.url)
-        file_crawl = File_Crawl(self.validator, self.base_url)
+        file_crawl = File_Crawl(self.validator, self.base_url, check_robots, self.robots_parser)
         file_crawl.file_entry_point_crawl()
+        return "Complete"
 
     # Creates a base url for the crawl.
     def create_base(self): 
