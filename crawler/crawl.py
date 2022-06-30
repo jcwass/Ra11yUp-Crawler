@@ -1,7 +1,7 @@
 import sys
 import time
 import urllib.request
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 import logging
 import requests
 from bs4 import BeautifulSoup
@@ -22,17 +22,22 @@ class Crawl():
     # Initializes the class variables.
     def __init__ (self, url, has_robots, base_url, validator, robot_parser):
         self.url = url
+        self.path = urlparse(self.url).path
         self.has_robots = has_robots
         self.base_url = base_url
         self.validator = validator
         self.robot_parser = robot_parser
+
     def flush_then_wait(self):
         sys.stdout.flush()
         sys.stderr.flush()
         time.sleep(0.5)
+    
     def get_all_url(self):
     # Loops through a web page and grabs all urls found on the page.
-        if self.robot_parser.check_url(self.url) or not self.has_robots:
+        if self.robot_parser.check_url(self.path) or not self.has_robots:
+
+
             url_list = []
 
             # Get the input url web page HTML content.
@@ -60,7 +65,7 @@ class Crawl():
             
             # Looping through the url list and adding url to crawl entry.
             for url in final_url_list:
-                if self.robot_parser.check_url(url) or not self.has_robots:
+                if self.robot_parser.check_url(urlparse(url).path) or not self.has_robots:
                     page = requests.head(url)
                     f = open('Ra11yUp-Crawler/res/crawl-entry-point.txt', 'a+')
                     if page.status_code < 400 and not self.validator.has_added_to_entry(url):

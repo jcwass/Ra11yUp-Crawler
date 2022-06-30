@@ -1,10 +1,9 @@
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QPlainTextEdit,
+from PyQt5.QtWidgets import (QMainWindow, QPushButton, QPlainTextEdit,
                                 QVBoxLayout, QWidget)
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QProcess
-import sys
 
 class MainWindow(QMainWindow):
 
@@ -72,65 +71,3 @@ class MainWindow(QMainWindow):
     def process_finished(self):
         self.message("Process finished.")
         self.p = None
-
-
-
-
-
-
-# import sys
-# from PyQt5.QtCore import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
-# from crawler.validator import Validator
-# class start_window(QWidget):
-#     def __init__(self, crawler, app, parent = None):
-#         super(start_window, self).__init__(parent)
-#         self.validator = Validator()
-
-#         self.crawler = crawler
-#         self.app = app
-#         self.win = QWidget()
-
-#         self.l1 = QLabel('URL')
-#         self.url_input = QLineEdit()
-#         self.url_input.setText('https://ra11yup.linearbsystems.net')
-
-#         self.fbox = QFormLayout()
-#         self.fbox.addRow(self.l1, self.url_input)
-
-#         self.b1 = QPushButton("Submit")
-#         self.b1.setCheckable(True)
-#         self.b1.clicked.connect(self.btnstate)
-#         self.b1.clearFocus()
-
-#         self.b2 = QPushButton("Cancel")
-#         self.b2.setCheckable(True)
-#         self.b2.clicked.connect(self.btnstate)
-
-#         self.hbox = QHBoxLayout()
-#         self.robots = QRadioButton("Check Robots?")
-#         self.hbox.addWidget(self.robots)
-#         self.hbox.addStretch()
-#         self.fbox.addRow(QLabel("Options"), self.hbox)
-#         self.fbox.addRow(self.b1, self.b2)
-
-#         self.setLayout(self.fbox)
-#         self.setWindowTitle("Button demo")
-
-#     def btnstate(self):
-#         if self.b1.isChecked():
-#             if self.validator.does_url_exist(self.url_input.text()):
-#                 self.crawler.start_crawls(self.url_input.text(), self.robots.isChecked())
-#             else:
-#                 msg = QMessageBox()
-#                 msg.setIcon(QMessageBox.Critical)
-#                 msg.setText("Invalid")
-#                 msg.setInformativeText('Invalid URL Provided, please try another.')
-#                 msg.setWindowTitle("Invalid")
-#                 msg.exec_()
-#             self.b1.setChecked(False)
-#         elif self.b2.isChecked():
-#             sys.exit()
-
-                

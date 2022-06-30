@@ -1,3 +1,4 @@
+import sys
 from urllib.parse import urlparse
 from robots_parser import Robots_Parser
 import logging
@@ -42,7 +43,7 @@ class Crawler ():
 
         # Creating Robot Parser
         robots = self.base_url + '/robots.txt'
-        self.robots_parser = Robots_Parser(self.url, self.base_url)
+        self.robots_parser = Robots_Parser(robots)
 
         # Clearing the entry_point file.
         f = open('Ra11yUp-Crawler/res/crawl-entry-point.txt', 'w')
@@ -53,12 +54,12 @@ class Crawler ():
             has_robots = False
 
         # Begins the initial crawl and then calls the file_crawl object.
+        sys.stdout.write(f'Crawling: {self.url}')
         initial_crawl = Crawl(self.url, has_robots, self.base_url, self.validator, self.robots_parser)
         initial_crawl.get_all_url()
         self.validator.add_to_crawled(self.url)
         file_crawl = File_Crawl(self.validator, self.base_url, check_robots, self.robots_parser)
         file_crawl.file_entry_point_crawl()
-        return "Complete"
 
     # Creates a base url for the crawl.
     def create_base(self): 

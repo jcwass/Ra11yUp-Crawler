@@ -1,5 +1,4 @@
 import sys
-import time
 from crawl import Crawl
 
 class File_Crawl():
@@ -37,7 +36,7 @@ class File_Crawl():
                     has_robots = self.validator.does_url_exist(robots)
                 else: 
                     has_robots = False
-
+                sys.stdout.write(f'\nCrawling: {url}')
                 new_crawl = Crawl(url, has_robots, self.base_url, self.validator, self.robot_parser)
                 new_crawl.get_all_url()
                 self.validator.add_to_crawled(url)
