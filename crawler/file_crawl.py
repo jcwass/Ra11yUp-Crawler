@@ -17,7 +17,7 @@ class File_Crawl():
         self.base_url = base_url
         self.check_robots = check_robots
         self.robot_parser = robot_parser
-    # Loops through each url found in the entry_point.txt file. 
+
     # Initializes a crawl instance for each url that has not been crawled.
     def file_entry_point_crawl(self):
         

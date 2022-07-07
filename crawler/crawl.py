@@ -68,7 +68,9 @@ class Crawl():
                 if self.robot_parser.check_url(urlparse(url).path) or not self.has_robots:
                     page = requests.head(url)
                     f = open('Ra11yUp-Crawler/res/crawl-entry-point.txt', 'a+')
-                    if page.status_code < 400 and not self.validator.has_added_to_entry(url):
+                    if url[-1] == '/':
+                        url = url[:-1]
+                    if page.status_code < 400 and not self.validator.has_added_to_entry(url) and self.base_url[:-1] in url:
                         f.write(f'{url}\n')
 
                         # Adds the url to the list of crawled urls.

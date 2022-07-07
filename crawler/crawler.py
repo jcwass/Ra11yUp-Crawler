@@ -39,7 +39,7 @@ class Crawler ():
         # These lines define date and other relevant info for logging purposes.
         d = datetime.today()
         epoch_time = time.mktime(d.timetuple())
-        logging.basicConfig(filename=f'logs/crawl-{getpass.getuser()}.{epoch_time}.log', level=logging.DEBUG )
+        logging.basicConfig(filename=f'Ra11yUp-Crawler/logs/crawl-{getpass.getuser()}.{epoch_time}.log', level=logging.DEBUG )
 
         # Creating Robot Parser
         robots = self.base_url + '/robots.txt'
