@@ -13,6 +13,7 @@ class Validator():
     def __init__(self):
         self.crawled_list = []
         self.in_file = []
+        self.pinged = []
     
     # Checks to see if a provided url exists
     def does_url_exist(self, url):
@@ -28,6 +29,15 @@ class Validator():
     # Appends a url to the crawled_list attribute.
     def add_to_crawled(self, url):
         self.crawled_list.append(url)
+    
+    def add_to_pinged(self, url):
+        self.pinged.append(url)
+
+    def check_pinged(self, url):
+        if url in self.pinged:
+            return False
+        else: 
+            return True
 
     # Checks to see if the url provided has been crawled or not.
     def has_crawled(self, url):

@@ -35,7 +35,7 @@ class Crawl():
     
     def get_all_url(self):
     # Loops through a web page and grabs all urls found on the page.
-        if self.robot_parser.check_url(self.path) or not self.has_robots:
+        if (self.robot_parser.check_url(self.path) or not self.has_robots):
 
 
             url_list = []
@@ -65,11 +65,11 @@ class Crawl():
             
             # Looping through the url list and adding url to crawl entry.
             for url in final_url_list:
-                if self.robot_parser.check_url(urlparse(url).path) or not self.has_robots:
+                if url[-1] != '/':
+                    url = url + '/'
+                if (self.robot_parser.check_url(urlparse(url).path) or not self.has_robots) and self.validator.check_pinged(url):
                     page = requests.head(url)
                     f = open('Ra11yUp-Crawler/res/crawl-entry-point.txt', 'a+')
-                    if url[-1] == '/':
-                        url = url[:-1]
                     if page.status_code < 400 and not self.validator.has_added_to_entry(url) and self.base_url[:-1] in url:
                         f.write(f'{url}\n')
 
@@ -77,11 +77,12 @@ class Crawl():
                         self.validator.add_to_file_list(url)
                     
                     # Logs all urls to a log file.
+                    self.validator.add_to_pinged(url)
                     self.flush_then_wait()
                     sys.stdout.write(f'Page status for {url} is: {page.status_code}')
                     sys.stdout.write('')
                     logging.info('Page status for {} is: {}'.format(url,page.status_code))
 
-            f.close()
+                    f.close()
         else:
             print("Can't scrape.")
