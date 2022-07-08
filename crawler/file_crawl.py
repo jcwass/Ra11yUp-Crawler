@@ -11,12 +11,13 @@ class File_Crawl():
             self.base_url (String): A string of the base url of the site.
     '''
     # Initializes class attributes.
-    def __init__(self, validator, base_url, check_robots, robot_parser):
+    def __init__(self, validator, base_url, check_robots, robot_parser, logger):
         self.entry_point= "Ra11yUp-Crawler/res/crawl-entry-point.txt"
         self.validator = validator
         self.base_url = base_url
         self.check_robots = check_robots
         self.robot_parser = robot_parser
+        self.logger = logger
 
     # Initializes a crawl instance for each url that has not been crawled.
     def file_entry_point_crawl(self):
@@ -37,6 +38,6 @@ class File_Crawl():
                 else: 
                     has_robots = False
                 sys.stdout.write(f'\nCrawling: {url}')
-                new_crawl = Crawl(url, has_robots, self.base_url, self.validator, self.robot_parser)
+                new_crawl = Crawl(url, has_robots, self.base_url, self.validator, self.robot_parser, self.logger)
                 new_crawl.get_all_url()
                 self.validator.add_to_crawled(url)

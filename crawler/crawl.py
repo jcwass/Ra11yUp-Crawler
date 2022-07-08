@@ -2,7 +2,6 @@ import sys
 import time
 import urllib.request
 from urllib.parse import urljoin, urlparse
-import logging
 import requests
 from bs4 import BeautifulSoup
 
@@ -20,13 +19,14 @@ class Crawl():
     '''
 
     # Initializes the class variables.
-    def __init__ (self, url, has_robots, base_url, validator, robot_parser):
+    def __init__ (self, url, has_robots, base_url, validator, robot_parser, logger):
         self.url = url
         self.path = urlparse(self.url).path
         self.has_robots = has_robots
         self.base_url = base_url
         self.validator = validator
         self.robot_parser = robot_parser
+        self.logger = logger
 
     def flush_then_wait(self):
         sys.stdout.flush()
@@ -65,9 +65,9 @@ class Crawl():
             
             # Looping through the url list and adding url to crawl entry.
             for url in final_url_list:
-                if url[-1] != '/':
+                if url[-1] != '/' and '.html' not in url and '.php' not in url:
                     url = url + '/'
-                if (self.robot_parser.check_url(urlparse(url).path) or not self.has_robots) and self.validator.check_pinged(url):
+                if (self.robot_parser.check_url(urlparse(url).path) or not self.has_robots) and self.validator.check_pinged(url) and 'mailto' not in url:
                     page = requests.head(url)
                     f = open('Ra11yUp-Crawler/res/crawl-entry-point.txt', 'a+')
                     if page.status_code < 400 and not self.validator.has_added_to_entry(url) and self.base_url[:-1] in url:
@@ -78,10 +78,7 @@ class Crawl():
                     
                     # Logs all urls to a log file.
                     self.validator.add_to_pinged(url)
-                    self.flush_then_wait()
-                    sys.stdout.write(f'Page status for {url} is: {page.status_code}')
-                    sys.stdout.write('')
-                    logging.info('Page status for {} is: {}'.format(url,page.status_code))
+                    self.logger.write(url,page.status_code)
 
                     f.close()
         else:

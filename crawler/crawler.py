@@ -1,10 +1,7 @@
 import sys
 from urllib.parse import urlparse
 from robots_parser import Robots_Parser
-import logging
-import getpass
-import time
-from datetime import datetime
+from logger import Logger
 from validator import Validator
 from crawl import Crawl
 from file_crawl import File_Crawl
@@ -25,6 +22,7 @@ class Crawler ():
         self.url = ""
         self.validator = Validator()
         self.robots_parser = ''
+        self.logger = Logger()
 
     # Start the crawl process.
     def start_crawls(self, url, check_robots):
@@ -35,11 +33,6 @@ class Crawler ():
 
         # Runs the create base function.
         self.create_base()
-
-        # These lines define date and other relevant info for logging purposes.
-        d = datetime.today()
-        epoch_time = time.mktime(d.timetuple())
-        logging.basicConfig(filename=f'Ra11yUp-Crawler/logs/crawl-{getpass.getuser()}.{epoch_time}.log', level=logging.DEBUG )
 
         # Creating Robot Parser
         robots = self.base_url + '/robots.txt'
@@ -55,10 +48,10 @@ class Crawler ():
 
         # Begins the initial crawl and then calls the file_crawl object.
         sys.stdout.write(f'Crawling: {self.url}')
-        initial_crawl = Crawl(self.url, has_robots, self.base_url, self.validator, self.robots_parser)
+        initial_crawl = Crawl(self.url, has_robots, self.base_url, self.validator, self.robots_parser, self.logger)
         initial_crawl.get_all_url()
         self.validator.add_to_crawled(self.url)
-        file_crawl = File_Crawl(self.validator, self.base_url, check_robots, self.robots_parser)
+        file_crawl = File_Crawl(self.validator, self.base_url, check_robots, self.robots_parser, self.logger)
         file_crawl.file_entry_point_crawl()
 
     # Creates a base url for the crawl.

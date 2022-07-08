@@ -25,9 +25,15 @@ class Robots_Parser:
                 current_agent = line.split(': ')[1].split(' ')[0]
             if current_agent == '*':
                 if line.startswith('Allow'):    # this is for allowed url
-                    result_data_set["Allowed"].append(line.split(': ')[1].split(' ')[0])    # to neglect the comments or other junk info
+                    try:
+                        result_data_set["Allowed"].append(line.split(': ')[1].split(' ')[0])    # to neglect the comments or other junk info
+                    except:
+                        pass
                 elif line.startswith('Disallow'):    # this is for disallowed url
-                    result_data_set["Disallowed"].append(line.split(': ')[1].split(' ')[0])    # to neglect the comments or other junk info
+                    try:
+                        result_data_set["Disallowed"].append(line.split(': ')[1].split(' ')[0])    # to neglect the comments or other junk info
+                    except:
+                        pass
         self.result_data_set = result_data_set
     
     # Determines if the URL path presented can be crawled.
